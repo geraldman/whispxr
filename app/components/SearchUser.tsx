@@ -23,7 +23,7 @@ export default function SearchUser({
     onSearchResult(null);
 
     if (!/^\d{8}$/.test(numericId)) {
-      setError('ID harus 8 digit');
+      setError('ID needs to be 8 digits');
       return;
     }
 
@@ -47,7 +47,7 @@ export default function SearchUser({
   }
 
   return (
-    <div className="px-4 mb-4">
+    <div className={`px-4 ${error ? "" : "mb-4"}`}>
       <div className="flex items-center gap-2 bg-white rounded-full px-3 sm:px-4 py-2 border border-[#74512D]/15 shadow-sm">
         <input
           value={numericId}
@@ -79,11 +79,11 @@ export default function SearchUser({
         </button>
       </div>
 
-      {error && (
-        <p className="mt-2 text-xs text-red-600 px-2">
+      {error ? (
+        <p className="my-2 text-xs text-red-600 px-2">
           {error}
         </p>
-      )}
+      ) : ""}
     </div>
   );
 }

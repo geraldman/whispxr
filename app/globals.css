@@ -89,3 +89,13 @@ body {
     transition: opacity 0.15s ease-in-out;
   }
 }
+/* =============== PASSWORD FORM TOGGLE VISIBLE =================== */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* For Chrome */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+}

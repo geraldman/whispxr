@@ -17,6 +17,7 @@
     "lucide-react": "^0.563.0",
     "motion": "^12.31.0",
     "next": "^16.1.6",
+    "nodemailer": "^8.0.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "three": "^0.182.0"
@@ -25,6 +26,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^20",
+    "@types/nodemailer": "^7.0.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.182.0",

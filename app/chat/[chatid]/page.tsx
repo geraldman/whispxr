@@ -131,10 +131,10 @@ export default function ChatDetailPage() {
     };
 
     return (
-        <div className="relative flex flex-col h-full bg-[#F6F1E3]">
+        <div className="relative flex flex-col h-dvh md:h-full bg-[#F6F1E3]">
             {/* ================= CHAT HEADER (FRONTEND STYLING) ================= */}
             <div
-                className="h-14 px-3 md:px-6 flex items-center justify-between
+                className="fixed md:relative top-0 left-0 right-0 h-14 px-3 md:px-6 w-full z-20 flex items-center justify-between
                            bg-[#E6D5BC]
                            border border-[#74512D]/15"
             >
@@ -204,10 +204,13 @@ export default function ChatDetailPage() {
                 )}
             </div>
 
+            {/* Mobile spacer so fixed navbar never overlaps top messages */}
+            <div className="h-14 md:hidden flex-shrink-0" />
+
             {/* ================= MESSAGES (BACKEND COMPONENT) ================= */}
-            <div className="flex-1 overflow-y-auto chat-scroll px-3 md:px-6 py-4 md:py-6 pb-32 md:pb-28">
-  <MessageBox />
-</div>
+            <div className="flex-1 overflow-y-auto chat-scroll px-3 md:px-6 pt-4 md:pt-6 pb-32 md:pb-28">
+                <MessageBox />
+            </div>
 
             {/* ================= INPUT (BACKEND COMPONENT - only if not expired) ================= */}
             {!chatExpired && (
@@ -222,7 +225,7 @@ export default function ChatDetailPage() {
             ">
             <div className="
                 w-full
-                rounded-2xl
+                rounded-3xl
                 bg-white/90 backdrop-blur-xl
                 border border-[#74512D]/15
                 shadow-[0_20px_40px_rgba(0,0,0,0.18)]

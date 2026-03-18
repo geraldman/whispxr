@@ -141,7 +141,7 @@ export default function ChatSidebar({
           <img
             src="/logo.png"
             alt="WHISPXR"
-            className="h-6 object-contain shrink-0"
+            className="h-15 mt-2 object-contain shrink-0"
           />
 
           <div className="ml-auto flex items-center gap-1 pr-2 shrink-0">

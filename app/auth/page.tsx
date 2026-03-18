@@ -135,106 +135,69 @@ function AuthPageContent() {
 
   async function handleRegister() {
     try {
-      setError("");
-      setSuccessMessage("");
-      setLoading(true);
 
       let userCredential = null;
 
       if (!username.trim()) {
         setError("Username is required");
-        setLoading(false);
         return;
       }
 
       if (username.trim().length < 3) {
         setError("Username must be at least 3 characters");
-        setLoading(false);
         return;
       }
 
       if (!email.trim()) {
         setError("Email is required");
-        setLoading(false);
         return;
       }
 
       if (!isValidEmail(email.trim())) {
         setError("Please enter a valid email address");
-        setLoading(false);
         return;
       }
 
       if (!password) {
         setError("Password is required");
-        setLoading(false);
         return;
       }
 
       if (password.length < 6) {
         setError("Password must be at least 6 characters");
-        setLoading(false);
         return;
       }
 
+      setError("");
+      setSuccessMessage("");
+      setLoading(true);
+
       try {
-        console.log("Creating Firebase user...");
         userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const uid = userCredential.user.uid;
 
-        try {
-          console.log("Generating encryption keys on client...");
-          const encryptionResult = await createAccountProcedureSimplified(password);
-          
-          console.log("Storing encrypted keys...");
-          const result = await storeUserKeys(
-            uid,
-            email,
-            username,
-            encryptionResult.publicKey,
-            encryptionResult.encryptedPrivateKey,
-            encryptionResult.iv,
-            encryptionResult.salt
-          );
-          
-          if (!result.success) {
-            throw new Error(result.error || "Failed to store encryption keys");
-          }
+        const encryptionResult = await createAccountProcedureSimplified(password);
+        const result = await storeUserKeys(uid, email, username, 
+          encryptionResult.publicKey,
+          encryptionResult.encryptedPrivateKey,
+          encryptionResult.iv,
+          encryptionResult.salt
+        );
 
-          console.log("Registration successful! Signing out for security...");
-          try {
-            await signOut(auth);
-          } catch (signOutErr) {
-            console.warn("Sign out completed with minor errors (likely browser extension blocking):", signOutErr);
-          }
-          
-          console.log("Registration complete! Switching to login mode...");
-          setLoading(false);
-          setMode("login");
-          setPassword("");
-          setUsername("");
-          setSuccessMessage("Registration successful! Please log in with your credentials.");
-        } catch (innerErr: any) {
-          console.error("Registration error, cleaning up Firebase user...", innerErr);
-          if (userCredential?.user) {
-            try {
-              try {
-                await signOut(auth);
-              } catch (signOutErr) {
-                console.warn("Sign out error during cleanup (ignorable):", signOutErr);
-              }
-              await deleteUserAccount(userCredential.user.uid);
-              console.log("Firebase user cleaned up successfully");
-            } catch (deleteErr) {
-              console.error("Failed to delete Firebase user:", deleteErr);
-            }
-          }
-          throw innerErr;
+        if (!result.success) {
+          throw new Error(result.error || "Failed to store encryption keys");
         }
+
       } catch (err: any) {
-        console.error("Registration error:", err);
-        const errorMessage = err.message || err.toString() || "An unexpected error occurred";
-        setError(errorMessage);
+        // Cleanup Firebase user if it was created
+        if (userCredential?.user) {
+          await signOut(auth).catch(() => {});
+          await deleteUserAccount(userCredential.user.uid).catch(e => 
+            console.error("Failed to delete Firebase user:", e)
+          );
+        }
+        setError(err.message || "An unexpected error occurred. Please try again.");
+
       } finally {
         setLoading(false);
       }
@@ -261,22 +224,6 @@ function AuthPageContent() {
 
       {!loading && (
         <div className="w-full min-h-[100dvh] flex flex-col bg-[#F8F4E1] px-4 relative">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute top-4 left-4 sm:top-6 sm:left-8 lg:left-20 z-30"
-          >
-            <Image
-              src="/logo.png"
-              alt="WHISPXR Logo"
-              width={160}
-              height={60}
-              className="object-contain w-28 sm:w-36 lg:w-40 h-auto"
-              priority
-            />
-          </motion.div>
 
           <div className="flex-1 flex flex-col justify-start sm:justify-center items-center pt-16 pb-10 sm:py-10">
           {/* Card */}

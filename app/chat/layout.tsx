@@ -113,7 +113,7 @@ function ChatLayoutInner({
       <div className="flex items-center justify-between">
 
       {/* Logo */}
-      <img src="/logo.png" className="h-6" />
+      <img src="/logo.png" className="w-20 h-10 object-cover" />
 
       {/* Logout button */}
       <TooltipIconButton

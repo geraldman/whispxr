@@ -319,7 +319,7 @@ function MessageInput() {
                 {/* TEXTAREA (FRONTEND STYLING) */}
                 <textarea
                     className="
-                        flex-1 resize-none rounded-full px-4 py-2.5 text-sm
+                        flex-1 resize-none rounded-2xl px-4 py-2.5 text-sm
                         bg-white text-[#2B1B12]
                         outline-none
                         border border-black/5

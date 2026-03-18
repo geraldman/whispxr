@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { handleForgotPassword } from "../actions/handleForgotPassword";
 
 import { routes } from "@/app/routes";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-
+  const [isEmailValidate, setEmailVal] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,6 +21,15 @@ export default function ForgotPasswordPage() {
     handleReset();
   }
 
+  useEffect(() => {
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setEmailVal(emailRegex.test(email.trim()));
+    } else {
+      setEmailVal(false);
+    }
+  }, [email]);
+
   async function handleReset() {
     if (loading) return;
 
@@ -28,8 +38,7 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      // mock reset process
-      await new Promise((r) => setTimeout(r, 1200));
+      await handleForgotPassword(email);
       setSuccess(true);
     } catch {
       setError("Failed to send reset link. Please try again.");
@@ -42,22 +51,6 @@ export default function ForgotPasswordPage() {
     <div className="w-full min-h-[100dvh] flex flex-col bg-[#F8F4E1] px-4 relative">
 
       {/* Logo */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="absolute top-4 left-4 sm:top-6 sm:left-8 lg:left-20 z-30"
-      >
-        <Image
-          src="/logo.png"
-          alt="WHISPXR Logo"
-          width={160}
-          height={60}
-          className="object-contain w-32 sm:w-36 lg:w-40 h-auto"
-          priority
-        />
-      </motion.div>
-
       <div className="flex-1 flex items-center justify-center py-10">
       {/* Card */}
       <motion.div
@@ -101,9 +94,9 @@ export default function ForgotPasswordPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="text-[13px] text-black/70 text-center mb-8"
+          className="text-[13px] text-black/70 text-center mb-6 "
         >
-          Enter your email and we’ll send you a password reset link.
+          Enter your email and we'll send you a password reset link.
         </motion.p>
 
         {/* Email */}
@@ -144,7 +137,7 @@ export default function ForgotPasswordPage() {
               exit={{ opacity: 0 }}
               className="mt-2 text-sm text-green-600"
             >
-              The reset link has been sent to your email.
+              Check your email if it's registered.
             </motion.p>
           )}
         </AnimatePresence>
@@ -152,7 +145,7 @@ export default function ForgotPasswordPage() {
         {/* Action Button */}
         <button
           type="submit"
-          disabled={loading || !email.trim()}
+          disabled={loading || !isEmailValidate}
           className="cursor-pointer mt-6 w-full rounded-xl bg-[#74512D] py-3
                      text-white font-medium
                      shadow-md shadow-[#74512D]/30

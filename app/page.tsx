@@ -39,14 +39,14 @@ export default function Home() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="absolute top-4 left-4 sm:left-6 top-5 lg:left-20 z-30 flex items-center gap-2"
+        className="absolute top-0 left-4 sm:left-6 top-0 lg:left-20 z-30 flex items-center gap-2"
       >
         <Image
           src="/logo.png"
           alt="WHISPXR Logo"
-          width={160}
-          height={60}
-          className="object-contain w-28 sm:w-36 lg:w-40 h-auto"
+          width={100}
+          height={100}
+          className="w-17 h-12 object-cover md:w-22 mt-4"
         />
       </motion.div>
 
