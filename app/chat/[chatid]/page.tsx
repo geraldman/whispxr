@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import MessageInput from "@/app/components/messageinput";
 import MessageBox from "../../layout/messageBox";
@@ -10,45 +10,26 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useChatContext } from "@/lib/context/ChatContext";
-import { useSidebar } from "@/lib/context/SidebarContext";
 import { CHAT_INACTIVITY_TIMEOUT } from "@/lib/config/chatConfig";
 import LoadingScreen from "@/app/components/LoadingScreenFixed";
 import { useRouter } from "next/navigation";
+import { ChatSessionProvider } from "@/lib/context/ChatSessionContext";
 
 export default function ChatDetailPage() {
     const params = useParams();
-    const pathname = usePathname();
     const chatId = params?.chatid as string;
     const { user, loading } = useRequireAuth();
     const uid = user?.uid;
     const { getChatMetadata } = useChatContext();
-    const { toggleSidebar } = useSidebar();
     const [chatExpired, setChatExpired] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
     const [showProfile, setShowProfile] = useState(false);
     const router = useRouter();
 
-    if (loading) {
-        return <LoadingScreen />;
-    }
-
-    if (!user) {
-  // ⛔ jangan redirect di render
-  return <LoadingScreen mode="logout" />;
-}
-
     // Get chat metadata from context
     const chatMetadata = getChatMetadata(chatId);
     const otherUsername = chatMetadata?.username || "Loading...";
     const otherUserInitial = chatMetadata?.userInitial || "?";
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
 
     // Real-time countdown monitoring (BACKEND LOGIC)
     useEffect(() => {
@@ -56,8 +37,6 @@ export default function ChatDetailPage() {
 
         let mounted = true;
         let lastActivityTime: number | null = null;
-        let checkInterval: NodeJS.Timeout | undefined;
-
         const chatDocRef = doc(db, "chats", chatId);
 
         // Function to update countdown and check expiry
@@ -84,6 +63,8 @@ export default function ChatDetailPage() {
             }
         };
 
+        const checkInterval: NodeJS.Timeout = setInterval(updateCountdown, 1000);
+
         // Set up real-time listener
         const unsubscribe = onSnapshot(
             chatDocRef,
@@ -108,20 +89,12 @@ export default function ChatDetailPage() {
             }
         );
 
-        // Update countdown every second
-        checkInterval = setInterval(updateCountdown, 1000);
-
         return () => {
             mounted = false;
             unsubscribe();
-            if (checkInterval) clearInterval(checkInterval);
+            clearInterval(checkInterval);
         };
     }, [chatId, uid]);
-
-    // Auto close profile on navigation (FRONTEND FEATURE)
-    useEffect(() => {
-        setShowProfile(false);
-    }, [pathname]);
 
     // Format countdown as MM:SS
     const formatCountdown = (seconds: number) => {
@@ -130,7 +103,16 @@ export default function ChatDetailPage() {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    if (loading) {
+        return <LoadingScreen />;
+    }
+
+    if (!user) {
+        return <LoadingScreen mode="logout" />;
+    }
+
     return (
+        <ChatSessionProvider key={`${uid ?? "anon"}:${chatId}`} chatId={chatId} uid={uid ?? null}>
         <div className="relative flex flex-col h-dvh md:h-full bg-[#F6F1E3]">
             {/* ================= CHAT HEADER (FRONTEND STYLING) ================= */}
             <div
@@ -237,6 +219,7 @@ export default function ChatDetailPage() {
                 )}
             </AnimatePresence>
         </div>
+        </ChatSessionProvider>
     );
 }
 

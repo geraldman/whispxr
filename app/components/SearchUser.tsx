@@ -35,7 +35,7 @@ export default function SearchUser({
     setLoading(false);
 
     if (!res.found) {
-      setError('User tidak ditemukan');
+      setError('User not found');
     } else if (res.user) {
       // Map the response to match SearchedUser type
       onSearchResult({

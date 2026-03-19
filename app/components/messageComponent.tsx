@@ -1,8 +1,45 @@
 import { motion, AnimatePresence } from "framer-motion";
+import type { ReactNode } from "react";
 
 interface MessageProps {
   messageText: string;
   from: "send" | "receive";
+}
+
+function renderBoldMarkdown(text: string) {
+  const nodes: ReactNode[] = [];
+  const boldPattern = /\*\*(.+?)\*\*/g;
+
+  let lastIndex = 0;
+  let match: RegExpExecArray | null = boldPattern.exec(text);
+  let key = 0;
+
+  while (match) {
+    const fullMatch = match[0];
+    const boldText = match[1];
+    const startIndex = match.index;
+    const endIndex = startIndex + fullMatch.length;
+
+    if (startIndex > lastIndex) {
+      nodes.push(text.slice(lastIndex, startIndex));
+    }
+
+    nodes.push(
+      <strong key={`bold-${key}`} className="font-semibold">
+        {boldText}
+      </strong>
+    );
+
+    lastIndex = endIndex;
+    key += 1;
+    match = boldPattern.exec(text);
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes;
 }
 
 export default function MessageComponent({
@@ -33,7 +70,7 @@ export default function MessageComponent({
           }
         `}
       >
-        {messageText}
+        {renderBoldMarkdown(messageText)}
       </motion.div>
     </AnimatePresence>
     </div>
