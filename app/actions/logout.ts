@@ -22,9 +22,7 @@ export async function logout() {
     // 3. Firebase sign out
     await signOut(auth);
     
-    console.log("Logout: Successfully logged out and cleared all local data");
   } catch (error) {
-    console.error("Logout: Error during logout", error);
     // Still attempt Firebase sign out even if other operations fail
     await signOut(auth);
   }

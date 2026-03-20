@@ -43,7 +43,6 @@ export default function SearchUserPage() {
       }
     } catch (err: any) {
       setError("Terjadi kesalahan server");
-      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -52,7 +52,6 @@ export default function ProfileSection() {
       },
       (error) => {
         if (!mounted) return;
-        console.error("Failed to listen to friend requests:", error);
       }
     );
 

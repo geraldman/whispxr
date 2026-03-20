@@ -64,7 +64,6 @@ export async function ensureChatExists(
   // If no friend request found by chatId (e.g., after unlinking), 
   // search for accepted friend requests involving the current user
   if (friendRequestsSnapshot.empty) {
-    console.log("🔍 No friend request found with chatId, searching by user...");
     
     // We need to check both directions since we can't use 'in' with two fields
     // First check where current user is 'from'
@@ -89,7 +88,6 @@ export async function ensureChatExists(
     });
     
     if (!matchingDoc) {
-      console.log("⚠️ No friend request found for user", currentUserId, "with chatId", chatId);
       return {
         success: false,
         exists: false,
@@ -112,7 +110,6 @@ export async function ensureChatExists(
 
   // Verify current user is a participant
   if (from !== currentUserId && to !== currentUserId) {
-    console.log("🚫 Unauthorized access attempt by", currentUserId, "to chat", chatId);
     return {
       success: false,
       exists: false,

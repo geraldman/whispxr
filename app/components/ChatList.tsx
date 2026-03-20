@@ -184,7 +184,6 @@ export default function ChatList({ uid }: ChatListProps) {
       },
       (error) => {
         if (!mounted) return;
-        console.error("Failed to listen to chats:", error);
         setLoading(false);
       }
     );
@@ -204,7 +203,6 @@ export default function ChatList({ uid }: ChatListProps) {
       },
       (error) => {
         if (!mounted) return;
-        console.error("Failed to listen to friend requests (from):", error);
       }
     );
 
@@ -223,7 +221,6 @@ export default function ChatList({ uid }: ChatListProps) {
       },
       (error) => {
         if (!mounted) return;
-        console.error("Failed to listen to friend requests (to):", error);
       }
     );
 
@@ -269,7 +266,6 @@ export default function ChatList({ uid }: ChatListProps) {
         },
         (error) => {
           if (!mounted) return;
-          console.error(`Failed to listen to presence for ${userId}:`, error);
         }
       );
     });

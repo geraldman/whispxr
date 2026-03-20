@@ -58,7 +58,6 @@ export default function RequestsContent({ onBack }: { onBack: () => void }) {
         setLoading(false);
       },
       (error) => {
-        console.error("Failed to listen to friend requests:", error);
         setLoading(false);
       }
     );
@@ -75,7 +74,6 @@ export default function RequestsContent({ onBack }: { onBack: () => void }) {
         router.push(`/chat/${result.chatId}`);
       }
     } catch (error) {
-      console.error("Failed to accept friend request:", error);
     }
   }
 

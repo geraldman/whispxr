@@ -9,7 +9,7 @@ export async function handleForgotPassword(email: string){
     // send the reset password link
     try{
         const actionCodeSettings = {
-            url: 'http://localhost:3000/usermgmt', // redirect after password reset
+            url: 'http://whispxr.vercel.app/usermgmt', // redirect after password reset
             handleCodeInApp: true, // true if you're handling it inside your app
         };
 
@@ -19,7 +19,6 @@ export async function handleForgotPassword(email: string){
         .get();
 
         if(querySnapshot.empty){
-            console.log(querySnapshot.size);
             return true;
         }
 

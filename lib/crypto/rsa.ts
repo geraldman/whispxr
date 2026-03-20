@@ -46,7 +46,6 @@ export async function importPublicKey(base64: string) {
   // Validate base64 format
   const base64Pattern = /^[A-Za-z0-9+/]*={0,2}$/;
   if (!base64Pattern.test(base64)) {
-    console.error('Invalid base64 characters detected in public key');
     throw new Error('Public key is corrupted or invalid');
   }
 
@@ -60,7 +59,6 @@ export async function importPublicKey(base64: string) {
       ["encrypt"]
     );
   } catch (error) {
-    console.error('Failed to decode or import public key:', error);
     throw new Error('Public key is corrupted or invalid');
   }
 }
@@ -75,7 +73,6 @@ export async function importPrivateKey(base64: string) {
   // Validate base64 format - should only contain valid base64 characters
   const base64Pattern = /^[A-Za-z0-9+/]*={0,2}$/;
   if (!base64Pattern.test(base64)) {
-    console.error('Invalid base64 characters detected in private key');
     throw new Error('Private key is corrupted. Please log out and log back in to regenerate your encryption keys.');
   }
 
@@ -89,7 +86,6 @@ export async function importPrivateKey(base64: string) {
       ["decrypt"]
     );
   } catch (error) {
-    console.error('Failed to decode or import private key:', error);
     throw new Error('Private key is corrupted. Please log out and log back in to regenerate your encryption keys.');
   }
 }

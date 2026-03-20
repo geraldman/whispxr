@@ -18,8 +18,6 @@ export default function Home() {
   }
 
   if (process.env.NODE_ENV === "development") {
-    console.log("HOME user:", user);
-    console.log("HOME loading:", loading);
   }
 
   return (

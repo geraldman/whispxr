@@ -311,14 +311,12 @@ export function ChatSessionProvider({ chatId, uid, children }: ChatSessionProvid
           },
           (snapshotError) => {
             if (!mounted) return;
-            console.error("Failed to monitor chat activity:", snapshotError);
           }
         );
 
         checkInterval = setInterval(checkExpiry, 1000);
       } catch (monitorError) {
         if (!mounted) return;
-        console.error("Could not setup monitor:", monitorError);
       }
     };
 

@@ -27,7 +27,6 @@ function MessageInput() {
         setError(null);
 
         try {
-            console.log("🔐 Encrypting message...");
 
             // Encrypt message with session key
             const { encryptedContent, iv } = await encryptMessageWithSession(
@@ -35,17 +34,14 @@ function MessageInput() {
                 sessionKey
             );
 
-            console.log("📤 Sending encrypted message...");
 
             // Send encrypted message to server
             await sendMessage(activeChatId, uid, encryptedContent, iv);
 
-            console.log("✅ Message sent successfully");
 
             // Clear input
             setMessage("");
         } catch (err) {
-            console.error("❌ Error sending message:", err);
             setError(err instanceof Error ? err.message : "Failed to send message");
         } finally {
             setSending(false);

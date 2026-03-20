@@ -136,11 +136,9 @@ function AuthPageContent() {
     }
 
     try {
-      console.log("Authenticating with Firebase...");
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
       
-      console.log("Fetching encrypted keys...");
       const keysResult = await getUserKeys(uid);
       
       if (!keysResult.success) {
@@ -152,7 +150,6 @@ function AuthPageContent() {
       let publicKeyToStore = "";
 
       try {
-        console.log("Decrypting private key on client...");
         const kdfPassword = await deriveKeyFromPassword(password, keysResult.salt);
         const ivArray = Array.from(Uint8Array.from(atob(keysResult.iv), c => c.charCodeAt(0)));
         const dataArray = Array.from(Uint8Array.from(atob(keysResult.encryptedPrivateKey), c => c.charCodeAt(0)));
@@ -166,7 +163,6 @@ function AuthPageContent() {
         privateKeyToStore = decryptedPrivateKeyBase64;
         publicKeyToStore = keysResult.publicKey;
       } catch (keyError) {
-        console.warn("Stored keys invalid/unreadable, rotating user keys...", keyError);
 
         const newEncryption = await createAccountProcedureSimplified(password);
         await updateUserEncryptionKeysSimplified(
@@ -191,17 +187,14 @@ function AuthPageContent() {
         publicKeyToStore = newEncryption.publicKey;
       }
 
-      console.log("Storing keys in IndexedDB...");
       const db = await getDB();
       await db.put("keys", privateKeyToStore, "userPrivateKey");
       await db.put("keys", publicKeyToStore, "userPublicKey");
       
       await new Promise(resolve => setTimeout(resolve, 500));
-      console.log("Login successful!");
       router.replace(routes.chats);
 
     } catch (err: any) {
-      console.error("Login exception:", err);
       setError(getFirebaseAuthErrorMessage(err, "login"));
     } finally {
       setLoading(false);
@@ -276,9 +269,7 @@ function AuthPageContent() {
         // Cleanup Firebase user if it was created
         if (userCredential?.user) {
           await signOut(auth).catch(() => {});
-          await deleteUserAccount(userCredential.user.uid).catch(e => 
-            console.error("Failed to delete Firebase user:", e)
-          );
+          await deleteUserAccount(userCredential.user.uid).catch(() => {});
         }
         setIsRegisteringFlow(false);
         isRegisteringFlowRef.current = false;
@@ -288,7 +279,6 @@ function AuthPageContent() {
         setLoading(false);
       }
     } catch (unexpectedErr: any) {
-      console.error("Unexpected error in handleRegister:", unexpectedErr);
       setIsRegisteringFlow(false);
       isRegisteringFlowRef.current = false;
       setError("An unexpected error occurred. Please try again.");

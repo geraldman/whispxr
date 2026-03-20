@@ -82,7 +82,6 @@ export async function cleanupInactiveChats(uid: string) {
 
     if (deletedCount > 0) {
       await batch.commit();
-      console.log(`Cleaned up ${deletedCount} inactive chats for user ${uid}`);
     }
 
     return {
@@ -91,7 +90,6 @@ export async function cleanupInactiveChats(uid: string) {
       timeoutHours: CHAT_INACTIVITY_TIMEOUT / (60 * 60 * 1000),
     };
   } catch (error: any) {
-    console.error("Error cleaning up inactive chats:", error);
     return { success: false, error: error.message };
   }
 }

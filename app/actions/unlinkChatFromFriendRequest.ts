@@ -13,7 +13,6 @@ export async function unlinkChatFromFriendRequest(
   userId: string
 ): Promise<UnlinkResult> {
   try {
-    console.log(`🔗 Unlinking chatId ${chatId} from friend_requests for user ${userId}`);
 
     // Find all friend_requests that reference this chatId
     const friendRequestsRef = adminDb.collection("friend_requests");
@@ -47,14 +46,11 @@ export async function unlinkChatFromFriendRequest(
 
     if (updateCount > 0) {
       await batch.commit();
-      console.log(`✅ Unlinked chatId from ${updateCount} friend_request(s)`);
     } else {
-      console.log(`ℹ️ No friend_requests found with chatId ${chatId}`);
     }
 
     return { success: true };
   } catch (error) {
-    console.error("Error unlinking chat from friend request:", error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : "Unknown error" 

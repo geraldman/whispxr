@@ -16,14 +16,12 @@ export async function deleteChatDocument(
   userId: string
 ): Promise<DeleteResult> {
   try {
-    console.log(`🗑️ Deleting chat document: ${chatId} by user: ${userId}`);
 
     // Get the chat document
     const chatRef = adminDb.collection("chats").doc(chatId);
     const chatSnap = await chatRef.get();
 
     if (!chatSnap.exists) {
-      console.log(`ℹ️ Chat ${chatId} already deleted`);
       return { success: true };
     }
 
@@ -60,11 +58,9 @@ export async function deleteChatDocument(
 
     await batch.commit();
     
-    console.log(`✅ Successfully deleted chat ${chatId}, ${messagesSnapshot.size} messages, and ${sessionsSnapshot.size} sessions`);
 
     return { success: true };
   } catch (error) {
-    console.error("Error deleting chat document:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error"

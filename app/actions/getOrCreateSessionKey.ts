@@ -40,19 +40,14 @@ export async function getOrCreateSessionKey(chatId: string, userId: string) {
     const sessionDoc = sessionSnapshot.docs[0];
     const sessionData = sessionDoc.data();
     
-    console.log(`Session found for chat ${chatId}, session ID: ${sessionDoc.id}`);
-    console.log(`Available encrypted keys:`, Object.keys(sessionData).filter(k => k.startsWith('encryptedKey_')));
     
     // Each user has their own encrypted version of the session key
     const encryptedKeyForUser = sessionData[`encryptedKey_${userId}`];
     
     if (!encryptedKeyForUser) {
-      console.error(`Session key not found for user ${userId} in session ${sessionDoc.id}`);
-      console.error(`Available participants:`, Object.keys(sessionData).filter(k => k.startsWith('encryptedKey_')));
       throw new Error("Session key not found for this user");
     }
 
-    console.log(`Returning encrypted session key for user ${userId}`);
     
     return {
       sessionId: sessionDoc.id,
@@ -63,8 +58,6 @@ export async function getOrCreateSessionKey(chatId: string, userId: string) {
 
   // No session exists - need to generate one on client side
   // Return null to signal client to generate and store session key
-  console.log(`No session found for chat ${chatId}, requesting client to generate new session`);
-  console.log(`Participants:`, participants);
   
   return {
     sessionId: null,
@@ -111,7 +104,6 @@ export async function storeSessionKey(
     .get();
 
   if (!existingSessionSnapshot.empty) {
-    console.log("Session already exists, returning existing session instead of creating duplicate");
     const existingSession = existingSessionSnapshot.docs[0];
     return {
       success: true,
@@ -121,13 +113,11 @@ export async function storeSessionKey(
   }
 
   // Store session keys
-  console.log(`Creating new session for chat ${chatId} with keys for:`, Object.keys(encryptedKeys));
   const sessionDoc = await sessionsRef.add({
     ...encryptedKeys,
     createdAt: FieldValue.serverTimestamp(),
   });
 
-  console.log(`Session created successfully: ${sessionDoc.id}`);
 
   return {
     success: true,

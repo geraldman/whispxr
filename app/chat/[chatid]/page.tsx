@@ -85,7 +85,6 @@ export default function ChatDetailPage() {
             },
             (error) => {
                 if (!mounted) return;
-                console.error("Failed to monitor chat:", error);
             }
         );
 

@@ -161,7 +161,6 @@ export async function initializeChatSession(
   }
 
   // CASE 2: Chat doesn't exist - look for friend request and recreate
-  console.log("🔍 Chat doesn't exist, searching for friend request...");
 
   // Try to find friend request with this chatId
   let friendRequestsSnapshot = await adminDb

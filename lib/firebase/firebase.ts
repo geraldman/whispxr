@@ -20,7 +20,6 @@ export const auth = getAuth(app);
 // Set persistence to LOCAL so user stays logged in across browser sessions
 if (typeof window !== 'undefined') {
   setPersistence(auth, browserLocalPersistence).catch((error) => {
-    console.error("Error setting auth persistence:", error);
   });
 }
 
@@ -63,7 +62,6 @@ export async function updateUserEncryptionKeysSimplified(
     });
   }
   catch(error){
-    console.log("Failed to update encryption keys");
     throw error;
   }
 }

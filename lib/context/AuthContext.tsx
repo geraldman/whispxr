@@ -32,10 +32,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log(
-        "AuthContext state:",
-        firebaseUser?.uid ?? "null"
-      );
 
       if (firebaseUser) {
         setUser(firebaseUser as ExtendedUser);
@@ -51,7 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
           }
         } catch (e) {
-          console.error("Firestore fetch failed", e);
         }
       } else {
         setUser(null);
