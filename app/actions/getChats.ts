@@ -1,4 +1,4 @@
-x x "use server";
+"use server";
 
 import { adminDb } from "@/lib/firebase/firebaseAdmin";
 import { unstable_noStore as noStore } from "next/cache";
