@@ -1,14 +1,8 @@
-<table align="center">
-	<tr>
-		<td valign="middle">
-			<h1>WHISPXR</h1>
-		</td>
-		<td valign="top">
-			<img src="app/favicon.ico" alt="WHISPXR favicon" width="48" height="48" />
-		</td>
-	</tr>
-</table>
+<p align="center">
+	<img src="app/favicon.ico" alt="WHISPXR favicon" width="48" height="48" /> 
+</p>
 
+<h1 align="center">WHISPXR</h1>
 
 WHISPXR is a private real-time messaging web app built with Next.js and Firebase.
 
