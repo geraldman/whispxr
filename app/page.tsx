@@ -192,7 +192,7 @@ export default function Home() {
       
       {/* Easy to Use Section */}
 
-      <section className="relative z-40 bg-gradient-to-b from-[#f6efdc] via-[#f2e6c7] to-[#e9d8b2] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      {/* <section className="relative z-40 bg-gradient-to-b from-[#f6efdc] via-[#f2e6c7] to-[#e9d8b2] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mx-auto w-full max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -283,7 +283,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
