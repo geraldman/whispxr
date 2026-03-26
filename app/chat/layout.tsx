@@ -39,6 +39,7 @@ function ChatLayoutInner({
   const pathname = usePathname();
   const isChatRoom =
     pathname?.startsWith("/chat/") && pathname !== "/chat";
+  const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
   const [mobileSettingsView, setMobileSettingsView] =
     useState<SettingsView | null>(null);
   const router = useRouter();
@@ -58,8 +59,23 @@ function ChatLayoutInner({
 
       return () => unsub();
     }, [user?.uid]);
+
+    useEffect(() => {
+      const checkViewport = () => {
+        setIsMobileView(window.innerWidth < 768);
+      };
+
+      checkViewport();
+      window.addEventListener("resize", checkViewport);
+
+      return () => window.removeEventListener("resize", checkViewport);
+    }, []);
     
     if (loading || !user) {
+    return <LoadingScreen />;
+  }
+
+  if (isMobileView === null) {
     return <LoadingScreen />;
   }
 
@@ -67,7 +83,8 @@ function ChatLayoutInner({
   <div className="min-h-[100dvh] bg-[#F6F1E3] relative">
 
     {/* ================= DESKTOP LAYOUT ================= */}
-    <div className="hidden md:flex h-screen min-w-max">
+    {!isMobileView ? (
+    <div className="h-screen min-w-max flex">
 
       <ChatSidebar
         mode={mode}
@@ -76,6 +93,7 @@ function ChatLayoutInner({
         onBackToChat={() => setMode('chat')}
         onChangeSettingsView={setSettingsView}
         onSearchUser={setSearchedUser}
+        requestCount={requestCount}
         sidebarOpen={sidebarOpen}
         onCloseSidebar={() => setSidebarOpen(false)}
       />
@@ -100,9 +118,8 @@ function ChatLayoutInner({
         )}
       </main>
     </div>
-
-    {/* ================= MOBILE LAYOUT ================= */}
-    <div className="md:hidden h-full flex flex-col">
+    ) : (
+    <div className="h-full flex flex-col">
 
     {/* MOBILE STICKY HEADER */}
     {!isChatRoom && (
@@ -168,6 +185,7 @@ function ChatLayoutInner({
       />
       )}
     </div>
+    )}
     
     <LogoutModal
       open={showLogout}

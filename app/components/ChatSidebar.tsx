@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
 import { useAuth } from '@/lib/context/AuthContext';
 
 import SettingsMenu from '@/app/components/SettingsMenu';
@@ -22,6 +20,7 @@ export default function ChatSidebar({
   onBackToChat,
   onChangeSettingsView,
   onSearchUser,
+  requestCount = 0,
   sidebarOpen = false,
   onCloseSidebar,
 }: {
@@ -31,6 +30,7 @@ export default function ChatSidebar({
   onBackToChat: () => void;
   onChangeSettingsView: (v: SettingsView) => void;
   onSearchUser?: (user: any | null) => void;
+  requestCount?: number;
   sidebarOpen?: boolean;
   onCloseSidebar?: () => void;
 }) {
@@ -42,7 +42,6 @@ export default function ChatSidebar({
 
   const [width, setWidth] = useState(280);
   const [showLogout, setShowLogout] = useState(false);
-  const [requestCount, setRequestCount] = useState(0);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const isResizing = useRef(false);
@@ -83,39 +82,6 @@ export default function ChatSidebar({
   const username = user?.username || user?.email?.split('@')[0] || 'User';
   const userInitial = username[0]?.toUpperCase() || 'U';
   const userId = (user as any)?.numericId || '00000000';
-
-  /* ================= FRIEND REQUEST LISTENER ================= */
-  useEffect(() => {
-    if (!user?.uid) {
-      setRequestCount(0);
-      return;
-    }
-
-    let mounted = true;
-
-    // Real-time listener for friend requests
-    const requestsQuery = query(
-      collection(db, 'friend_requests'),
-      where('to', '==', user.uid),
-      where('status', '==', 'pending')
-    );
-
-    const unsubscribe = onSnapshot(
-      requestsQuery,
-      (snapshot) => {
-        if (!mounted) return;
-        setRequestCount(snapshot.docs.length);
-      },
-      (error) => {
-        if (!mounted) return;
-      }
-    );
-
-    return () => {
-      mounted = false;
-      unsubscribe();
-    };
-  }, [user?.uid]);
 
   return (
     <>
