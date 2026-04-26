@@ -4,6 +4,8 @@
 
 <h1 align="center">WHISPXR</h1>
 
+[![CI](https://github.com/geraldman/whispxr/actions/workflows/ci.yml/badge.svg)](https://github.com/geraldman/whispxr/actions/workflows/ci.yml)
+
 WHISPXR is a private real-time messaging web app built with Next.js and Firebase.
 
 It focuses on:
